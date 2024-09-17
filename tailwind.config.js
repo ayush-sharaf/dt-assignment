@@ -10,7 +10,12 @@ module.exports = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        'navbarColor':'#F0F0F0'
       },
+      boxShadow: {
+        'custom': '0px 4px 4px 0px #00000040',
+      },
+      
     },
   },
   plugins: [],

@@ -1,101 +1,107 @@
+'use client';
+import { useState } from "react";
 import Image from "next/image";
+import NavBar from "./components/NavBar";
+import TopContent from "./components/TopContent";
+import ProjectManagement from "./components/ProjectManagement";
+import AssetTitleList from "./components/AssetTitleList";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [isOpenLeft, setIsOpenLeft] = useState(false);
+  const [isOpenRight, setIsOpenRight] = useState(false); // For right side notice board
+  const [assetTitles, setAssetTitles] = useState([]);
+  const jsonUrl = "/data.json";
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  return (
+    <div className="relative h-screen">
+      <NavBar />
+
+      {/* Left Side Collapsible Window */}
+      <div
+        className={`absolute top-39 left-0 h-[692px] transition-all duration-300 z-20 ${
+          isOpenLeft ? "w-[392px]" : "w-[132px]"
+        } bg-white shadow-lg rounded-lg`}
+      >
+        <div className="bg-black h-[50px] rounded-t-lg">
+          <button
+            className="absolute top-2 right-2 bg-black text-white rounded-md"
+            onClick={() => setIsOpenLeft(!isOpenLeft)}
+            aria-label="Toggle window"
           >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            {isOpenLeft ? (
+              <Image src="/closeButton.svg" width={45} height={85} />
+            ) : (
+              <Image src="/openButton.svg" width={45} height={85} />
+            )}
+          </button>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {isOpenLeft && <AssetTitleList assetTitles={assetTitles} />}
+        {!isOpenLeft &&(<div className="flex justify-center m-4"><svg width="68" height="68" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="0.5" y="0.5" width="67" height="67" rx="19.5" stroke="#0029FF"/>
+<path d="M29.368 23.96V20.972H36.136V47H32.824V23.96H29.368Z" fill="#0029FF"/>
+</svg>
+</div>
+)}
+      </div>
+
+      {/* Right Side Collapsible Notice Board */}
+<div
+  className={`absolute top-39 right-0 h-[400px] transition-all duration-300 z-20 ${
+    isOpenRight ? "w-[392px]" : "w-[132px]" // Adjusted collapsed width (Black + White bar)
+  } bg-[#FDFDFD] shadow-lg rounded-lg`}
+>
+  {/* Black vertical bar */}
+  <div className="bg-black h-full w-[80px] flex flex-col items-center justify-between py-6 rounded-tl-xl rounded-bl-xl">
+    {/* Toggle button (open or close) at the top */}
+    <button
+      className="text-white text-3xl font-bold mb-4"
+      onClick={() => setIsOpenRight(!isOpenRight)}
+      aria-label="Toggle window"
+    >
+      {isOpenRight ? "X" : "≡"}  {/* "X" for close, "≡" (Hamburger icon) for open */}
+    </button>
+
+    {/* Notice Board Text */}
+    <div className="flex flex-col items-center space-y-2">
+      <span className="text-white text-sm font-light tracking-wider">N</span>
+      <span className="text-white text-sm font-light tracking-wider">o</span>
+      <span className="text-white text-sm font-light tracking-wider">t</span>
+      <span className="text-white text-sm font-light tracking-wider">i</span>
+      <span className="text-white text-sm font-light tracking-wider">c</span>
+      <span className="text-white text-sm font-light tracking-wider">e</span>
+      <span className="text-white text-sm font-light tracking-wider">B</span>
+      <span className="text-white text-sm font-light tracking-wider">o</span>
+      <span className="text-white text-sm font-light tracking-wider">a</span>
+      <span className="text-white text-sm font-light tracking-wider">r</span>
+      <span className="text-white text-sm font-light tracking-wider">d</span>
+    </div>
+  </div>
+
+  {/* White Bar next to black bar */}
+  <div className=" w-[52px] bg-white rounded-tr-lg rounded-br-lg"></div>
+
+  
+</div>
+
+
+        
+
+      {/* Main Content */}
+      <TopContent />
+      <ProjectManagement
+        jsonUrl={jsonUrl}
+        onAssetTitlesChange={setAssetTitles}
+      />
+
+      {/* Footer Images */}
+      <div className="relative bottom-0 right-0">
+        <div className="absolute bottom-0 right-0 flex flex-col items-center space-y-4 p-4">
+          <Image src="/bottom1.svg" width={65} height={85} />
+          <Image src="/bottom2.svg" width={65} height={85} />
+          <Image src="/bottom3.svg" width={65} height={85} />
+        </div>
+      </div>
     </div>
   );
 }
